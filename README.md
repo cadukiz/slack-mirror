@@ -78,7 +78,7 @@ Open the DMG and drag Slack Mirror to your Applications folder.
 ### Requirements
 
 - **macOS** (Apple Silicon or Intel)
-- **Python 3.8+** — if not installed: `xcode-select --install`
+- **Python 3.8+** — check with `python3 --version`. If not installed: [download from python.org](https://www.python.org/downloads/) or `brew install python3`
 - **Obsidian** — [download here](https://obsidian.md) with the [Obsidian CLI](https://github.com/Obsidian-CLI/obsidian-cli) plugin enabled
 
 ### First Run
