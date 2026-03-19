@@ -1,0 +1,52 @@
+{
+  "name": "slack-mirror",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --mac",
+    "build:dmg": "electron-builder --mac dmg",
+    "build:all": "electron-builder --mac --win",
+    "test": "echo \"No tests\" && exit 0"
+  },
+  "keywords": [],
+  "author": "Cadu",
+  "license": "ISC",
+  "description": "Slack to Obsidian mirror - control panel",
+  "build": {
+    "appId": "com.cadu.slack-mirror",
+    "productName": "Slack Mirror",
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": ["dmg", "zip"],
+      "icon": "icon.png"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html",
+      "icon.png"
+    ],
+    "extraResources": [
+      {
+        "from": "../slack_mirror",
+        "to": "scraper",
+        "filter": [
+          "**/*",
+          "!venv/**",
+          "!__pycache__/**",
+          "!*.pyc",
+          "!debug*.py",
+          "!workspaces/**",
+          "!auth.json",
+          "!sync_state.json",
+          "!.env"
+        ]
+      }
+    ]
+  },
+  "devDependencies": {
+    "electron": "^41.0.3",
+    "electron-builder": "^26.8.1"
+  }
+}

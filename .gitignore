@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+
+# Sensitive - session cookies, configs
+auth.json
+sync_state.json
+.env
+workspaces.json
+
+# Per-workspace data
+slack_mirror/workspaces/
+
+# Electron build output
+slack_mirror_app/dist/
+slack_mirror_app/node_modules/
+
+# Debug artifacts
+debug*.py
+debug_screenshot.png
+
+# OS
+.DS_Store

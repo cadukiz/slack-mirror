@@ -1,0 +1,9 @@
+auth.json
+sync_state.json
+.env
+__pycache__/
+venv/
+workspaces/
+debug*.py
+debug_screenshot.png
+.auth_done
