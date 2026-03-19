@@ -73,6 +73,10 @@ vault/
 
 Source label defaults to the URL domain (e.g., `acme` from `acme.slack.com`) but can be overridden by the user.
 
+**Naming constraints:**
+- Project names and source labels become directory names in the vault. Renaming a project or source label creates a new directory; old files under the previous name are left in place (the user can move or delete them manually in Obsidian). The UI should warn the user about this when renaming.
+- Source labels must be unique within a project (enforced at creation and rename time) to prevent vault path collisions.
+
 ### Index Files
 
 **Project index** (`{project-name}/index.md`):
@@ -100,7 +104,7 @@ Source label defaults to the URL domain (e.g., `acme` from `acme.slack.com`) but
 - [[Client Alpha/slack-acme/groups/John Doe, Jane Smith|John Doe, Jane Smith]]
 ```
 
-Index files are regenerated on each sync to reflect newly discovered conversations.
+Index files are regenerated only when the conversation list changes (new channel, DM, or group discovered), to avoid unnecessary churn if the vault is tracked in git.
 
 ## Python Backend
 
@@ -110,7 +114,7 @@ Index files are regenerated on each sync to reflect newly discovered conversatio
 slack_mirror/
 ├── main.py              # Accepts --source-type slack|teams, --project-name, --source-label
 ├── config.py            # Source-type aware, project/source path management
-├── auth.py              # Unchanged (open browser, manual login, save session)
+├── auth.py              # Updated: uses generic SOURCE_URL env var instead of SLACK_WORKSPACE_URL
 ├── slack_scraper.py     # Renamed from scraper.py, unchanged internals
 ├── teams_scraper.py     # NEW: same interface, Teams DOM selectors
 ├── obsidian_writer.py   # Updated paths: {project}/{source-prefix}/..., index generation
@@ -120,9 +124,12 @@ slack_mirror/
 
 ### main.py Changes
 
-- New CLI args: `--source-type slack|teams`, `--project-name`, `--source-label`
-- Routes to `slack_scraper.scrape_all()` or `teams_scraper.scrape_all()` based on `--source-type`
+- All configuration passed via env vars (not CLI args) for consistency with Electron spawn model
+- Env vars: `SOURCE_TYPE`, `SOURCE_ID`, `PROJECT_ID`, `PROJECT_NAME`, `SOURCE_LABEL`, `SOURCE_URL`, `OBSIDIAN_VAULT`, `CHANNELS`, `SYNC_DMS`, `SYNC_GROUPS`, `SOURCE_DIR`
+- Routes to `slack_scraper.scrape_all()` or `teams_scraper.scrape_all()` based on `SOURCE_TYPE`
+- Gates DM scraping on `SYNC_DMS=true` and group scraping on `SYNC_GROUPS=true`
 - Passes `project_name` and `source_label` to `obsidian_writer` for vault path construction
+- Retains `--history` flag as the only CLI arg
 - Sync flow remains identical: scrape -> filter new via sync_state -> write to Obsidian
 
 ### teams_scraper.py
@@ -141,6 +148,8 @@ Teams navigation:
 
 DOM selectors will be determined during implementation by inspecting the live Teams DOM.
 
+**Feasibility note:** Teams (especially the new Teams client) uses React with dynamically generated class names and virtual scrolling, making DOM scraping harder than Slack. A spike/prototype should be done early in implementation to validate that Playwright can reliably extract messages from Teams before building out the full scraper.
+
 ### obsidian_writer.py Changes
 
 - All write functions gain `project_name` and `source_prefix` params
@@ -150,8 +159,10 @@ DOM selectors will be determined during implementation by inspecting the live Te
 
 ### config.py Changes
 
-- New env vars: `SOURCE_TYPE`, `SOURCE_ID`, `PROJECT_NAME`, `SOURCE_LABEL`
+- Full env var set: `SOURCE_TYPE`, `SOURCE_ID`, `PROJECT_ID`, `PROJECT_NAME`, `SOURCE_LABEL`, `SOURCE_URL`, `OBSIDIAN_VAULT`, `CHANNELS`, `SYNC_DMS`, `SYNC_GROUPS`, `SOURCE_DIR`
+- `SLACK_WORKSPACE_URL` replaced by generic `SOURCE_URL` (used by both auth.py and scrapers)
 - `WORKSPACE_DIR` renamed to `SOURCE_DIR`, points to `projects/{project-id}/{source-id}/`
+- `SYNC_DMS` and `SYNC_GROUPS` default to `"true"` if not set
 - Path construction updated for project/source hierarchy
 
 ### utils.py (New)
@@ -206,7 +217,8 @@ Updated:
 
 - `workspaceState` becomes `sourceState` keyed by `{projectId}-{sourceId}`
 - Each source syncs independently with its own interval and child process
-- Python spawn env vars include: `SOURCE_TYPE`, `SOURCE_ID`, `PROJECT_NAME`, `SOURCE_LABEL`, `SLACK_WORKSPACE_URL` or equivalent
+- Python spawn env vars: `SOURCE_TYPE`, `SOURCE_ID`, `PROJECT_ID`, `PROJECT_NAME`, `SOURCE_LABEL`, `SOURCE_URL`, `OBSIDIAN_VAULT`, `CHANNELS`, `SYNC_DMS`, `SYNC_GROUPS`, `SOURCE_DIR`
+- No concurrency limit initially; each source gets its own Playwright instance. If resource usage becomes a problem, add a queue later.
 
 ### preload.js Changes
 
@@ -234,7 +246,8 @@ On first launch after update, if `workspaces.json` exists and `projects.json` do
    - Project name = workspace name
    - Source inherits all workspace config (url, vault, channels, intervals, toggles)
    - Source label auto-derived from URL domain
-3. Move `data/workspaces/{workspace-id}/` -> `data/projects/{project-id}/{source-id}/`
+3. Copy `data/workspaces/{workspace-id}/` -> `data/projects/{project-id}/{source-id}/` (copy first, delete originals only after full migration succeeds)
+   - Field rename: `slackUrl` -> `url` in the source config
 4. Write `projects.json`
 5. Rename `workspaces.json` to `workspaces.backup.json`
 6. Log migration details
