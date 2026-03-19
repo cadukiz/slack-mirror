@@ -8,10 +8,10 @@ import sys
 import time
 from pathlib import Path
 from playwright.sync_api import sync_playwright
-from config import AUTH_STATE_PATH, SLACK_WORKSPACE_URL, WORKSPACE_DIR
+from config import AUTH_STATE_PATH, SOURCE_URL, SOURCE_DIR
 
 # Signal file in workspace dir or fallback to root
-SIGNAL_FILE = WORKSPACE_DIR / ".auth_done"
+SIGNAL_FILE = SOURCE_DIR / ".auth_done"
 SIGNAL_FILE_ROOT = Path(__file__).parent / ".auth_done"
 
 
@@ -26,9 +26,9 @@ def login_and_save_session(signal_mode: bool = False):
         context = browser.new_context()
         page = context.new_page()
 
-        page.goto(SLACK_WORKSPACE_URL)
+        page.goto(SOURCE_URL)
 
-        print("\n=== Slack Login ===")
+        print(f"\n=== Login ({SOURCE_URL}) ===")
         print("1. Log in to your Slack workspace in the browser that just opened")
         print("2. Make sure you can see your channels/messages")
 
