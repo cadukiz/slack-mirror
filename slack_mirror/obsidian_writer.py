@@ -19,7 +19,7 @@ def _file_exists(path: str) -> bool:
 
 def _ensure_file(path: str, title: str, description: str = "Auto-synced messages."):
     if not _file_exists(path):
-        header = f"# {title}\n\n{description}"
+        header = f"# {title}\\n\\n{description}"
         _run_obsidian(f'create path="{path}" content="{header}" silent')
 
 
@@ -31,7 +31,7 @@ def format_messages(messages: list[dict]) -> str:
     for msg in messages:
         date = msg.get("date", "Unknown date")
         if date != current_date:
-            lines.append(f"\n### {date}\n")
+            lines.append(f"\\n### {date}\\n")
             current_date = date
 
         author = msg.get("author", "Unknown")
@@ -39,9 +39,9 @@ def format_messages(messages: list[dict]) -> str:
         text = msg.get("text", "").replace('"', '\\"').replace("\n", "\\n")
 
         timestamp = f"{date} {time_str}".strip()
-        lines.append(f"**{timestamp} - {author}** : {text}\n")
+        lines.append(f"**{timestamp} - {author}** : {text}\\n")
 
-    return "\n".join(lines)
+    return "\\n".join(lines)
 
 
 def _build_path(project_name: str, source_prefix: str, category: str, name: str) -> str:
@@ -119,7 +119,7 @@ def write_source_index(project_name: str, source_prefix: str, source_label: str,
             lines.append(f"- [[{base}/groups/{g}|{g}]]")
         lines.append("")
 
-    content = "\n".join(lines).replace('"', '\\"')
+    content = "\\n".join(lines).replace('"', '\\"')
 
     # Overwrite the index file
     if _file_exists(path):
@@ -144,7 +144,7 @@ def write_project_index(project_name: str, sources: list[dict]):
         lines.append(f"### [[{project_name}/{prefix}/index|{label}]]")
 
     lines.append("")
-    content = "\n".join(lines).replace('"', '\\"')
+    content = "\\n".join(lines).replace('"', '\\"')
 
     if _file_exists(path):
         _run_obsidian(f'delete path="{path}" silent')

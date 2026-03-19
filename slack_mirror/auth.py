@@ -1,5 +1,5 @@
 """
-First-time login: opens a browser for manual Slack login, then saves the session.
+First-time login: opens a browser for manual login, then saves the session.
 Run this once: python auth.py
 
 When run with --signal mode, it waits for a signal file instead of stdin input.
@@ -29,7 +29,7 @@ def login_and_save_session(signal_mode: bool = False):
         page.goto(SOURCE_URL)
 
         print(f"\n=== Login ({SOURCE_URL}) ===")
-        print("1. Log in to your Slack workspace in the browser that just opened")
+        print("1. Log in to your account in the browser that just opened")
         print("2. Make sure you can see your channels/messages")
 
         if signal_mode:

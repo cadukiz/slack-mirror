@@ -17,6 +17,8 @@ Configuration via environment variables:
     SYNC_GROUPS     - "true"/"false"
 """
 import argparse
+import json
+import os
 import sys
 from config import AUTH_STATE_PATH, SOURCE_TYPE, PROJECT_NAME, SOURCE_LABEL, SYNC_DMS, SYNC_GROUPS
 from obsidian_writer import (
@@ -99,7 +101,6 @@ def main():
                            all_channels, all_dms, all_groups)
 
         # Generate project index if we have the sources list
-        import os, json
         sources_json = os.getenv("SOURCES_JSON", "")
         if sources_json:
             try:
