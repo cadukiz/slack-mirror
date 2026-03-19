@@ -6,22 +6,32 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).parent
 
-# Workspace directory: can be set externally (packaged app) or derived locally
-WORKSPACE_ID = os.getenv("WORKSPACE_ID", "default")
-
-if os.getenv("WORKSPACE_DIR"):
-    WORKSPACE_DIR = Path(os.getenv("WORKSPACE_DIR"))
-else:
-    WORKSPACE_DIR = BASE_DIR / "workspaces" / WORKSPACE_ID
-
-# Ensure workspace directory exists
-WORKSPACE_DIR.mkdir(parents=True, exist_ok=True)
-
-AUTH_STATE_PATH = WORKSPACE_DIR / "auth.json"
-SYNC_STATE_PATH = WORKSPACE_DIR / "sync_state.json"
-
-SLACK_WORKSPACE_URL = os.getenv("SLACK_WORKSPACE_URL", "https://app.slack.com")
+# Source configuration (passed by Electron or set manually)
+SOURCE_TYPE = os.getenv("SOURCE_TYPE", "slack")  # "slack" or "teams"
+SOURCE_ID = os.getenv("SOURCE_ID", "default")
+PROJECT_ID = os.getenv("PROJECT_ID", "default")
+PROJECT_NAME = os.getenv("PROJECT_NAME", "Default")
+SOURCE_LABEL = os.getenv("SOURCE_LABEL", "default")
+SOURCE_URL = os.getenv("SOURCE_URL", os.getenv("SLACK_WORKSPACE_URL", "https://app.slack.com"))
 OBSIDIAN_VAULT = os.getenv("OBSIDIAN_VAULT", "my-vault")
 
-# Channels can be comma-separated via env var
+# Sync toggles
+SYNC_DMS = os.getenv("SYNC_DMS", "true").lower() == "true"
+SYNC_GROUPS = os.getenv("SYNC_GROUPS", "true").lower() == "true"
+
+# Channels (comma-separated)
 CHANNELS = [c.strip() for c in os.getenv("CHANNELS", "general").split(",") if c.strip()]
+
+# Source directory for state files (auth, sync_state)
+if os.getenv("SOURCE_DIR"):
+    SOURCE_DIR = Path(os.getenv("SOURCE_DIR"))
+elif os.getenv("WORKSPACE_DIR"):
+    # Backward compat for migration period
+    SOURCE_DIR = Path(os.getenv("WORKSPACE_DIR"))
+else:
+    SOURCE_DIR = BASE_DIR / "workspaces" / SOURCE_ID
+
+SOURCE_DIR.mkdir(parents=True, exist_ok=True)
+
+AUTH_STATE_PATH = SOURCE_DIR / "auth.json"
+SYNC_STATE_PATH = SOURCE_DIR / "sync_state.json"
