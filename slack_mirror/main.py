@@ -9,7 +9,7 @@ Usage:
 import argparse
 import sys
 from config import AUTH_STATE_PATH
-from scraper import scrape_all
+from slack_scraper import scrape_all
 from obsidian_writer import write_channel_messages, write_dm_messages, write_group_messages
 from sync_state import filter_new_messages, get_latest_timestamp, update_last_message_ts
 
