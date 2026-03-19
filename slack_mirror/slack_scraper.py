@@ -4,7 +4,7 @@ Reads messages from channels, DMs, and group chats.
 """
 import re
 from playwright.sync_api import sync_playwright, Page, BrowserContext
-from config import AUTH_STATE_PATH, SLACK_WORKSPACE_URL, CHANNELS
+from config import AUTH_STATE_PATH, SOURCE_URL, CHANNELS
 from utils import resolve_date
 
 
@@ -217,7 +217,7 @@ def scrape_all(load_history: bool = False) -> dict:
         page = context.new_page()
 
         print("  Loading Slack...")
-        page.goto(SLACK_WORKSPACE_URL, wait_until="domcontentloaded", timeout=60000)
+        page.goto(SOURCE_URL, wait_until="domcontentloaded", timeout=60000)
         _wait_for_slack(page)
         print("  Slack loaded!")
 
