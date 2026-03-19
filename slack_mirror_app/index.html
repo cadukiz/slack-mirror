@@ -16,7 +16,6 @@
       }
       button, input, select, label { -webkit-app-region: no-drag; }
 
-      /* Title bar area */
       .titlebar {
         height: 38px;
         display: flex;
@@ -29,7 +28,6 @@
         flex-shrink: 0;
       }
 
-      /* Layout: sidebar + main */
       .app-layout {
         display: flex;
         flex: 1;
@@ -39,7 +37,7 @@
 
       /* Sidebar */
       .sidebar {
-        width: 220px;
+        width: 240px;
         background: #16213e;
         border-right: 1px solid #0f3460;
         display: flex;
@@ -53,36 +51,72 @@
         letter-spacing: 1px;
         color: #555;
       }
-      .ws-list {
+      .tree-list {
         flex: 1;
         overflow-y: auto;
       }
-      .ws-item {
-        padding: 10px 16px;
+
+      /* Project item */
+      .project-item {
+        padding: 8px 12px;
         cursor: pointer;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
         font-size: 13px;
+        font-weight: 600;
         color: #aaa;
         border-left: 3px solid transparent;
         transition: all 0.15s;
       }
-      .ws-item:hover { background: #1a2744; color: #ddd; }
-      .ws-item.active {
+      .project-item:hover { background: #1a2744; color: #ddd; }
+      .project-item.active {
         background: #1a2744;
         color: #fff;
         border-left-color: #e94560;
       }
-      .ws-item .dot {
+      .project-item .arrow {
+        font-size: 10px;
+        width: 12px;
+        transition: transform 0.15s;
+      }
+      .project-item .arrow.expanded { transform: rotate(90deg); }
+
+      /* Source item */
+      .source-item {
+        padding: 7px 12px 7px 36px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: #888;
+        border-left: 3px solid transparent;
+        transition: all 0.15s;
+      }
+      .source-item:hover { background: #1a2744; color: #ccc; }
+      .source-item.active {
+        background: #1a2744;
+        color: #fff;
+        border-left-color: #e94560;
+      }
+      .source-item .dot {
         width: 8px;
         height: 8px;
         border-radius: 50%;
         flex-shrink: 0;
       }
-      .ws-item .dot.running { background: #4caf50; }
-      .ws-item .dot.stopped { background: #555; }
-      .ws-item .ws-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .source-item .dot.running { background: #4caf50; }
+      .source-item .dot.stopped { background: #555; }
+      .source-item .src-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .source-item .src-type {
+        font-size: 10px;
+        padding: 1px 5px;
+        border-radius: 3px;
+        background: #0f3460;
+        color: #666;
+        text-transform: uppercase;
+      }
 
       .sidebar-bottom {
         padding: 12px;
@@ -91,7 +125,7 @@
         flex-direction: column;
         gap: 8px;
       }
-      .btn-add-ws {
+      .btn-add {
         width: 100%;
         padding: 8px;
         background: #0f3460;
@@ -102,7 +136,7 @@
         cursor: pointer;
         text-align: center;
       }
-      .btn-add-ws:hover { background: #1a4a7a; color: #ccc; }
+      .btn-add:hover { background: #1a4a7a; color: #ccc; }
 
       .startup-toggle {
         display: flex;
@@ -122,7 +156,6 @@
         overflow: hidden;
       }
 
-      /* Workspace header */
       .ws-header {
         padding: 16px 20px;
         background: #16213e;
@@ -142,7 +175,6 @@
       .status-badge.running { background: #0a3d0a; color: #4caf50; border: 1px solid #4caf50; }
       .status-badge.stopped { background: #3d0a0a; color: #f44336; border: 1px solid #f44336; }
 
-      /* Inner tabs */
       .inner-tabs {
         display: flex;
         background: #16213e;
@@ -158,11 +190,9 @@
       .inner-tab:hover { color: #aaa; }
       .inner-tab.active { color: #e94560; border-bottom-color: #e94560; }
 
-      /* Panels */
       .panel { display: none; flex: 1; overflow: auto; padding: 16px 20px; }
       .panel.active { display: flex; flex-direction: column; }
 
-      /* Controls */
       .controls { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
       button {
         padding: 7px 16px;
@@ -189,7 +219,6 @@
       .btn-danger { background: transparent; color: #f44336; border: 1px solid #f44336; }
       .btn-danger:hover { background: #3d0a0a; }
 
-      /* Form */
       .form-group { margin-bottom: 14px; }
       .form-group label {
         display: block;
@@ -199,7 +228,7 @@
         text-transform: uppercase;
         letter-spacing: 0.5px;
       }
-      .form-group input {
+      .form-group input, .form-group select {
         width: 100%;
         padding: 9px 12px;
         background: #0f3460;
@@ -209,7 +238,7 @@
         font-size: 13px;
         outline: none;
       }
-      .form-group input:focus { border-color: #e94560; }
+      .form-group input:focus, .form-group select:focus { border-color: #e94560; }
       .form-row { display: flex; gap: 12px; }
       .form-row .form-group { flex: 1; }
 
@@ -223,7 +252,6 @@
       }
       .toggle-row input { width: 16px; height: 16px; }
 
-      /* Logs */
       .log-container {
         flex: 1;
         background: #0d1117;
@@ -238,7 +266,6 @@
       .log-entry { color: #8b949e; }
       .log-entry.error { color: #f85149; }
 
-      /* Auth */
       .auth-box {
         background: #16213e;
         border-radius: 6px;
@@ -249,7 +276,6 @@
       .auth-box ol { font-size: 13px; color: #aaa; margin: 10px 0; padding-left: 20px; }
       .auth-box ol li { margin-bottom: 4px; }
 
-      /* Empty state */
       .empty-state {
         flex: 1;
         display: flex;
@@ -258,6 +284,33 @@
         color: #444;
         font-size: 14px;
       }
+
+      /* Add source dropdown */
+      .add-source-dropdown {
+        position: relative;
+        display: inline-block;
+      }
+      .add-source-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: #16213e;
+        border: 1px solid #0f3460;
+        border-radius: 6px;
+        overflow: hidden;
+        z-index: 10;
+        min-width: 140px;
+        margin-top: 4px;
+      }
+      .add-source-menu.show { display: block; }
+      .add-source-option {
+        padding: 8px 14px;
+        cursor: pointer;
+        font-size: 12px;
+        color: #aaa;
+      }
+      .add-source-option:hover { background: #1a2744; color: #fff; }
     </style>
   </head>
   <body>
@@ -266,10 +319,10 @@
     <div class="app-layout">
       <!-- Sidebar -->
       <div class="sidebar">
-        <div class="sidebar-header">Workspaces</div>
-        <div class="ws-list" id="ws-list"></div>
+        <div class="sidebar-header">Projects</div>
+        <div class="tree-list" id="tree-list"></div>
         <div class="sidebar-bottom">
-          <div class="btn-add-ws" id="btn-add-ws">+ Add Workspace</div>
+          <div class="btn-add" id="btn-add-project">+ Add Project</div>
           <label class="startup-toggle">
             <input type="checkbox" id="chk-startup" />
             Launch at startup
@@ -280,54 +333,195 @@
       <!-- Main -->
       <div class="main" id="main-content">
         <div class="empty-state" id="empty-state">
-          Select a workspace or add a new one
+          Select a project or source, or add a new project
         </div>
       </div>
     </div>
 
     <script>
-      let workspaces = [];
-      let activeWsId = null;
+      let projects = [];
       let statuses = {};
+      let selectedProjectId = null;
+      let selectedSourceId = null; // null = project level, string = source level
+      let expandedProjects = new Set();
 
-      // --- Render sidebar ---
+      // --- Sidebar ---
       function renderSidebar() {
-        const list = document.getElementById("ws-list");
+        const list = document.getElementById("tree-list");
         list.innerHTML = "";
-        for (const ws of workspaces) {
-          const isRunning = statuses[ws.id]?.running;
-          const div = document.createElement("div");
-          div.className = `ws-item${ws.id === activeWsId ? " active" : ""}`;
-          div.innerHTML = `
-            <span class="dot ${isRunning ? "running" : "stopped"}"></span>
-            <span class="ws-name">${ws.name}</span>
+
+        for (const proj of projects) {
+          const isExpanded = expandedProjects.has(proj.id);
+          const isActiveProject = proj.id === selectedProjectId && !selectedSourceId;
+
+          // Project row
+          const projDiv = document.createElement("div");
+          projDiv.className = `project-item${isActiveProject ? " active" : ""}`;
+          projDiv.innerHTML = `
+            <span class="arrow ${isExpanded ? "expanded" : ""}">&#9654;</span>
+            <span>${proj.name}</span>
           `;
-          div.addEventListener("click", () => selectWorkspace(ws.id));
-          list.appendChild(div);
+          projDiv.addEventListener("click", (e) => {
+            if (e.target.classList.contains("arrow") || e.target.closest(".arrow")) {
+              toggleProject(proj.id);
+            } else {
+              selectProject(proj.id);
+            }
+          });
+          list.appendChild(projDiv);
+
+          // Source rows (if expanded)
+          if (isExpanded) {
+            for (const src of proj.sources || []) {
+              const key = `${proj.id}::${src.id}`;
+              const isRunning = statuses[key]?.running;
+              const isActiveSource = proj.id === selectedProjectId && src.id === selectedSourceId;
+
+              const srcDiv = document.createElement("div");
+              srcDiv.className = `source-item${isActiveSource ? " active" : ""}`;
+              srcDiv.innerHTML = `
+                <span class="dot ${isRunning ? "running" : "stopped"}"></span>
+                <span class="src-name">${src.label || "Unnamed"}</span>
+                <span class="src-type">${src.type || "slack"}</span>
+              `;
+              srcDiv.addEventListener("click", () => selectSource(proj.id, src.id));
+              list.appendChild(srcDiv);
+            }
+          }
         }
       }
 
-      // --- Select workspace ---
-      function selectWorkspace(id) {
-        activeWsId = id;
+      function toggleProject(projectId) {
+        if (expandedProjects.has(projectId)) {
+          expandedProjects.delete(projectId);
+        } else {
+          expandedProjects.add(projectId);
+        }
         renderSidebar();
-        renderWorkspacePanel();
       }
 
-      // --- Render workspace panel ---
-      function renderWorkspacePanel() {
+      function selectProject(projectId) {
+        selectedProjectId = projectId;
+        selectedSourceId = null;
+        expandedProjects.add(projectId);
+        renderSidebar();
+        renderProjectPanel();
+      }
+
+      function selectSource(projectId, sourceId) {
+        selectedProjectId = projectId;
+        selectedSourceId = sourceId;
+        renderSidebar();
+        renderSourcePanel();
+      }
+
+      // --- Project Panel ---
+      function renderProjectPanel() {
         const main = document.getElementById("main-content");
-        const ws = workspaces.find((w) => w.id === activeWsId);
-        if (!ws) {
-          main.innerHTML = '<div class="empty-state">Select a workspace or add a new one</div>';
+        const proj = projects.find((p) => p.id === selectedProjectId);
+        if (!proj) {
+          main.innerHTML = '<div class="empty-state">Select a project or source</div>';
           return;
         }
 
-        const isRunning = statuses[ws.id]?.running;
+        main.innerHTML = `
+          <div class="ws-header">
+            <h2>${proj.name}</h2>
+          </div>
+          <div class="panel active" style="gap: 16px;">
+            <div class="form-group">
+              <label>Project Name</label>
+              <input type="text" id="proj-name" value="${proj.name}" />
+            </div>
+            <div class="controls">
+              <button class="btn-save" id="btn-save-project">Save</button>
+              <div class="add-source-dropdown">
+                <button class="btn-sync" id="btn-add-source">+ Add Source</button>
+                <div class="add-source-menu" id="add-source-menu">
+                  <div class="add-source-option" data-type="slack">Slack</div>
+                  <div class="add-source-option" data-type="teams">Teams</div>
+                </div>
+              </div>
+              <button class="btn-danger" id="btn-delete-project">Delete Project</button>
+            </div>
+            <div style="color: #666; font-size: 13px;">
+              ${(proj.sources || []).length} source(s) configured.
+              ${(proj.sources || []).length === 0 ? "Add a Slack or Teams source to get started." : "Click a source in the sidebar to configure it."}
+            </div>
+          </div>
+        `;
+
+        // Save project name
+        document.getElementById("btn-save-project").addEventListener("click", async () => {
+          proj.name = document.getElementById("proj-name").value;
+          await window.api.saveProject(proj);
+          projects = await window.api.getProjects();
+          renderSidebar();
+          renderProjectPanel();
+        });
+
+        // Add source dropdown
+        const addBtn = document.getElementById("btn-add-source");
+        const menu = document.getElementById("add-source-menu");
+        addBtn.addEventListener("click", () => menu.classList.toggle("show"));
+        document.addEventListener("click", (e) => {
+          if (!e.target.closest(".add-source-dropdown")) menu.classList.remove("show");
+        }, { once: true });
+
+        menu.querySelectorAll(".add-source-option").forEach((opt) => {
+          opt.addEventListener("click", async () => {
+            const type = opt.dataset.type;
+            const sourceId = "src-" + Date.now();
+            const source = {
+              id: sourceId,
+              type,
+              label: type === "slack" ? "New Slack" : "New Teams",
+              url: type === "slack" ? "" : "https://teams.microsoft.com",
+              vault: "",
+              channels: "",
+              intervalMinutes: 30,
+              autoSync: false,
+              syncDMs: true,
+              syncGroups: true,
+            };
+            await window.api.addSource(proj.id, source);
+            projects = await window.api.getProjects();
+            expandedProjects.add(proj.id);
+            selectSource(proj.id, sourceId);
+          });
+        });
+
+        // Delete project
+        document.getElementById("btn-delete-project").addEventListener("click", async () => {
+          if (confirm(`Delete project "${proj.name}" and all its sources?`)) {
+            await window.api.deleteProject(proj.id);
+            projects = await window.api.getProjects();
+            selectedProjectId = projects[0]?.id || null;
+            selectedSourceId = null;
+            renderSidebar();
+            if (selectedProjectId) renderProjectPanel();
+            else document.getElementById("main-content").innerHTML = '<div class="empty-state">Select a project or source, or add a new project</div>';
+          }
+        });
+      }
+
+      // --- Source Panel ---
+      function renderSourcePanel() {
+        const main = document.getElementById("main-content");
+        const proj = projects.find((p) => p.id === selectedProjectId);
+        const src = proj?.sources?.find((s) => s.id === selectedSourceId);
+        if (!proj || !src) {
+          main.innerHTML = '<div class="empty-state">Source not found</div>';
+          return;
+        }
+
+        const key = `${proj.id}::${src.id}`;
+        const isRunning = statuses[key]?.running;
+        const typeLabel = src.type === "teams" ? "Teams" : "Slack";
 
         main.innerHTML = `
           <div class="ws-header">
-            <h2>${ws.name}</h2>
+            <h2>${typeLabel} — ${src.label}</h2>
             <span class="status-badge ${isRunning ? "running" : "stopped"}">
               ${isRunning ? "Running" : "Stopped"}
             </span>
@@ -353,52 +547,52 @@
           <!-- Config -->
           <div class="panel" id="panel-config">
             <div class="form-group">
-              <label>Workspace Name</label>
-              <input type="text" id="cfg-name" value="${ws.name}" />
+              <label>Source Label</label>
+              <input type="text" id="cfg-label" value="${src.label}" />
             </div>
             <div class="form-group">
-              <label>Slack Workspace URL</label>
-              <input type="text" id="cfg-url" value="${ws.slackUrl}" placeholder="https://yourworkspace.slack.com" />
+              <label>${typeLabel} URL</label>
+              <input type="text" id="cfg-url" value="${src.url}" placeholder="${src.type === "teams" ? "https://teams.microsoft.com" : "https://yourworkspace.slack.com"}" />
             </div>
             <div class="form-group">
               <label>Obsidian Vault Name</label>
-              <input type="text" id="cfg-vault" value="${ws.vault}" />
+              <input type="text" id="cfg-vault" value="${src.vault}" />
             </div>
             <div class="form-row">
               <div class="form-group">
                 <label>Channels (comma-separated)</label>
-                <input type="text" id="cfg-channels" value="${ws.channels || ""}" placeholder="general, random" />
+                <input type="text" id="cfg-channels" value="${src.channels || ""}" placeholder="general, random" />
               </div>
               <div class="form-group">
                 <label>Sync Interval (minutes)</label>
-                <input type="number" id="cfg-interval" value="${ws.intervalMinutes || 30}" min="1" max="1440" />
+                <input type="number" id="cfg-interval" value="${src.intervalMinutes || 30}" min="1" max="1440" />
               </div>
             </div>
             <div class="toggle-row">
-              <input type="checkbox" id="cfg-auto" ${ws.autoSync ? "checked" : ""} />
+              <input type="checkbox" id="cfg-auto" ${src.autoSync ? "checked" : ""} />
               <label for="cfg-auto">Auto-sync on app launch</label>
             </div>
             <div class="toggle-row">
-              <input type="checkbox" id="cfg-dms" ${ws.syncDMs !== false ? "checked" : ""} />
+              <input type="checkbox" id="cfg-dms" ${src.syncDMs !== false ? "checked" : ""} />
               <label for="cfg-dms">Sync direct messages</label>
             </div>
             <div class="toggle-row">
-              <input type="checkbox" id="cfg-groups" ${ws.syncGroups !== false ? "checked" : ""} />
+              <input type="checkbox" id="cfg-groups" ${src.syncGroups !== false ? "checked" : ""} />
               <label for="cfg-groups">Sync group messages</label>
             </div>
             <div class="controls">
-              <button class="btn-save" id="btn-save">Save Config</button>
-              <button class="btn-danger" id="btn-delete">Delete Workspace</button>
+              <button class="btn-save" id="btn-save-source">Save Config</button>
+              <button class="btn-danger" id="btn-delete-source">Remove Source</button>
             </div>
           </div>
 
           <!-- Auth -->
           <div class="panel" id="panel-auth">
             <div class="auth-box">
-              <p>Authenticate with <strong>${ws.name}</strong> Slack workspace:</p>
+              <p>Authenticate with <strong>${src.label}</strong> (${typeLabel}):</p>
               <ol>
                 <li>Click <strong>Open Login Browser</strong></li>
-                <li>Log into Slack in the browser that opens</li>
+                <li>Log into ${typeLabel} in the browser that opens</li>
                 <li>Once logged in, click <strong>Save Session</strong></li>
               </ol>
               <div class="controls">
@@ -414,7 +608,7 @@
           </div>
         `;
 
-        // Inner tab switching
+        // Tab switching
         main.querySelectorAll(".inner-tab").forEach((tab) => {
           tab.addEventListener("click", () => {
             main.querySelectorAll(".inner-tab").forEach((t) => t.classList.remove("active"));
@@ -425,16 +619,16 @@
         });
 
         // Control buttons
-        document.getElementById("btn-start").addEventListener("click", () => window.api.startSync(ws.id));
-        document.getElementById("btn-stop").addEventListener("click", () => window.api.stopSync(ws.id));
-        document.getElementById("btn-sync-once").addEventListener("click", () => window.api.runOnce(ws.id));
+        document.getElementById("btn-start").addEventListener("click", () => window.api.startSync(proj.id, src.id));
+        document.getElementById("btn-stop").addEventListener("click", () => window.api.stopSync(proj.id, src.id));
+        document.getElementById("btn-sync-once").addEventListener("click", () => window.api.runOnce(proj.id, src.id));
 
-        // Config save
-        document.getElementById("btn-save").addEventListener("click", async () => {
+        // Save source config
+        document.getElementById("btn-save-source").addEventListener("click", async () => {
           const updated = {
-            ...ws,
-            name: document.getElementById("cfg-name").value,
-            slackUrl: document.getElementById("cfg-url").value,
+            ...src,
+            label: document.getElementById("cfg-label").value,
+            url: document.getElementById("cfg-url").value,
             vault: document.getElementById("cfg-vault").value,
             channels: document.getElementById("cfg-channels").value,
             intervalMinutes: parseInt(document.getElementById("cfg-interval").value) || 30,
@@ -442,34 +636,34 @@
             syncDMs: document.getElementById("cfg-dms").checked,
             syncGroups: document.getElementById("cfg-groups").checked,
           };
-          await window.api.saveWorkspace(updated);
-          workspaces = await window.api.getWorkspaces();
+          await window.api.saveSource(proj.id, updated);
+          projects = await window.api.getProjects();
           renderSidebar();
-          renderWorkspacePanel();
+          renderSourcePanel();
         });
 
-        // Delete
-        document.getElementById("btn-delete").addEventListener("click", async () => {
-          if (confirm(`Delete workspace "${ws.name}"?`)) {
-            await window.api.deleteWorkspace(ws.id);
-            workspaces = await window.api.getWorkspaces();
-            activeWsId = workspaces[0]?.id || null;
+        // Delete source
+        document.getElementById("btn-delete-source").addEventListener("click", async () => {
+          if (confirm(`Remove source "${src.label}" from project "${proj.name}"?`)) {
+            await window.api.deleteSource(proj.id, src.id);
+            projects = await window.api.getProjects();
+            selectedSourceId = null;
             renderSidebar();
-            renderWorkspacePanel();
+            renderProjectPanel();
           }
         });
 
         // Auth
-        document.getElementById("btn-auth").addEventListener("click", () => window.api.runAuth(ws.id));
-        document.getElementById("btn-auth-save").addEventListener("click", () => window.api.signalAuth(ws.id));
+        document.getElementById("btn-auth").addEventListener("click", () => window.api.runAuth(proj.id, src.id));
+        document.getElementById("btn-auth-save").addEventListener("click", () => window.api.signalAuth(proj.id, src.id));
 
         // Load existing logs
-        window.api.getLogs(ws.id).then((existingLogs) => {
+        window.api.getLogs(proj.id, src.id).then((existingLogs) => {
           existingLogs.forEach((msg) => appendLogToPanel(msg));
         });
       }
 
-      // --- Append log ---
+      // --- Logs ---
       function appendLogToPanel(message) {
         const controlLogs = document.getElementById("control-logs");
         const fullLogs = document.getElementById("full-logs");
@@ -487,15 +681,16 @@
 
       // --- Events ---
       window.api.onLog((data) => {
-        if (data.workspaceId === activeWsId) {
+        if (data.projectId === selectedProjectId && data.sourceId === selectedSourceId) {
           appendLogToPanel(data.message);
         }
       });
 
       window.api.onSyncStatus((status) => {
-        statuses[status.workspaceId] = status;
+        const key = `${status.projectId}::${status.sourceId}`;
+        statuses[key] = status;
         renderSidebar();
-        if (status.workspaceId === activeWsId) {
+        if (status.projectId === selectedProjectId && status.sourceId === selectedSourceId) {
           const badge = document.querySelector(".status-badge");
           if (badge) {
             badge.textContent = status.running ? "Running" : "Stopped";
@@ -504,23 +699,17 @@
         }
       });
 
-      // --- Add workspace ---
-      document.getElementById("btn-add-ws").addEventListener("click", async () => {
-        const id = "ws-" + Date.now();
-        const ws = {
+      // --- Add project ---
+      document.getElementById("btn-add-project").addEventListener("click", async () => {
+        const id = "proj-" + Date.now();
+        const proj = {
           id,
-          name: "New Workspace",
-          slackUrl: "",
-          vault: "",
-          channels: "",
-          intervalMinutes: 30,
-          autoSync: false,
-          syncDMs: true,
-          syncGroups: true,
+          name: "New Project",
+          sources: [],
         };
-        await window.api.saveWorkspace(ws);
-        workspaces = await window.api.getWorkspaces();
-        selectWorkspace(id);
+        await window.api.saveProject(proj);
+        projects = await window.api.getProjects();
+        selectProject(id);
       });
 
       // --- Startup checkbox ---
@@ -530,14 +719,14 @@
 
       // --- Init ---
       (async () => {
-        workspaces = await window.api.getWorkspaces();
+        projects = await window.api.getProjects();
         statuses = await window.api.getAllStatuses();
         const startupEnabled = await window.api.getLoginAtStartup();
         document.getElementById("chk-startup").checked = startupEnabled;
 
         renderSidebar();
-        if (workspaces.length > 0) {
-          selectWorkspace(workspaces[0].id);
+        if (projects.length > 0) {
+          selectProject(projects[0].id);
         }
       })();
     </script>
