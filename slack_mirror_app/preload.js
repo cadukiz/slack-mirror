@@ -1,24 +1,29 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("api", {
-  // Workspaces
-  getWorkspaces: () => ipcRenderer.invoke("get-workspaces"),
-  saveWorkspace: (ws) => ipcRenderer.invoke("save-workspace", ws),
-  deleteWorkspace: (id) => ipcRenderer.invoke("delete-workspace", id),
+  // Projects
+  getProjects: () => ipcRenderer.invoke("get-projects"),
+  saveProject: (proj) => ipcRenderer.invoke("save-project", proj),
+  deleteProject: (id) => ipcRenderer.invoke("delete-project", id),
+
+  // Sources
+  addSource: (projectId, source) => ipcRenderer.invoke("add-source", { projectId, source }),
+  deleteSource: (projectId, sourceId) => ipcRenderer.invoke("delete-source", { projectId, sourceId }),
+  saveSource: (projectId, source) => ipcRenderer.invoke("save-source", { projectId, source }),
 
   // Sync
-  startSync: (wsId) => ipcRenderer.invoke("start-sync", wsId),
-  stopSync: (wsId) => ipcRenderer.invoke("stop-sync", wsId),
-  runOnce: (wsId) => ipcRenderer.invoke("run-once", wsId),
-  getStatus: (wsId) => ipcRenderer.invoke("get-status", wsId),
+  startSync: (projectId, sourceId) => ipcRenderer.invoke("start-sync", { projectId, sourceId }),
+  stopSync: (projectId, sourceId) => ipcRenderer.invoke("stop-sync", { projectId, sourceId }),
+  runOnce: (projectId, sourceId) => ipcRenderer.invoke("run-once", { projectId, sourceId }),
+  getStatus: (projectId, sourceId) => ipcRenderer.invoke("get-status", { projectId, sourceId }),
   getAllStatuses: () => ipcRenderer.invoke("get-all-statuses"),
 
   // Auth
-  runAuth: (wsId) => ipcRenderer.invoke("run-auth", wsId),
-  signalAuth: (wsId) => ipcRenderer.invoke("signal-auth", wsId),
+  runAuth: (projectId, sourceId) => ipcRenderer.invoke("run-auth", { projectId, sourceId }),
+  signalAuth: (projectId, sourceId) => ipcRenderer.invoke("signal-auth", { projectId, sourceId }),
 
   // Logs
-  getLogs: (wsId) => ipcRenderer.invoke("get-logs", wsId),
+  getLogs: (projectId, sourceId) => ipcRenderer.invoke("get-logs", { projectId, sourceId }),
 
   // Startup
   setLoginAtStartup: (enabled) => ipcRenderer.invoke("set-login-at-startup", enabled),
