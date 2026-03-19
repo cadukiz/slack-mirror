@@ -1,6 +1,6 @@
 # Slack Mirror
 
-**Your work conversations shouldn't live in a black box.** Slack Mirror automatically captures every message from your Slack workspaces — channels, DMs, and group chats — and mirrors them into your Obsidian vault in real time.
+**Your work conversations shouldn't live in a black box.** Slack Mirror automatically captures every message from your Slack workspaces and Microsoft Teams tenants — channels, DMs, and group chats — and mirrors them into your Obsidian vault in real time.
 
 > Stop losing context. Start building your second brain.
 
@@ -36,7 +36,8 @@ The goal is simple: **full context about your work, projects, and clients — al
 
 ## Features
 
-- **Multi-workspace** — monitor unlimited Slack workspaces, each synced to its own Obsidian vault
+- **Multi-project** — organize sources by project with multiple Slack workspaces and Teams tenants
+- **Microsoft Teams** — channels, chats, and group chats
 - **Auto-sync** — configurable intervals (default: every 30 minutes)
 - **Channels, DMs, and groups** — captures everything, organized by conversation type
 - **Smart deduplication** — only syncs new messages, never duplicates
@@ -48,7 +49,7 @@ The goal is simple: **full context about your work, projects, and clients — al
 ## How It Works
 
 ```
-Your Slack (web) → Playwright (headless browser) → Python scraper → Obsidian CLI → Your vault
+Your Slack/Teams (web) → Playwright (headless browser) → Python scraper → Obsidian CLI → Your vault
 ```
 
 Slack Mirror uses browser automation to read your Slack messages — no Slack API or admin permissions required. If you can see it in Slack, Slack Mirror can capture it.
@@ -57,14 +58,18 @@ Slack Mirror uses browser automation to read your Slack messages — no Slack AP
 
 ```
 your-vault/
-├── slack/
-│   ├── channels/
-│   │   └── project-alpha.md
-│   ├── dms/
-│   │   ├── Keanu Reeves.md
-│   │   └── Dolly Parton.md
-│   └── groups/
-│       └── Snoop Dogg, Morgan Freeman, Arnold.md
+└── Client Alpha/
+    ├── index.md
+    ├── slack-acme/
+    │   ├── index.md
+    │   ├── channels/project-alpha.md
+    │   ├── dms/Keanu Reeves.md
+    │   └── groups/Snoop Dogg, Morgan Freeman.md
+    └── teams-acme/
+        ├── index.md
+        ├── channels/General.md
+        ├── chats/Dolly Parton.md
+        └── groups/Arnold, Morgan Freeman.md
 ```
 
 ## Installation
@@ -84,14 +89,15 @@ Open the DMG and drag Slack Mirror to your Applications folder.
 ### First Run
 
 1. Open **Slack Mirror** from Applications
-2. Click **+ Add Workspace** in the sidebar
-3. Configure:
-   - **Name**: anything you want (e.g., "My Company")
-   - **Slack URL**: your workspace URL (e.g., `https://mycompany.slack.com`)
+2. Click **+ Add Project** in the sidebar
+3. Click **+ Add Source** and choose **Slack** or **Teams**
+4. Configure:
+   - **Source Label**: anything you want (e.g., "My Company")
+   - **URL**: your workspace or tenant URL (e.g., `https://mycompany.slack.com`)
    - **Obsidian Vault**: the vault name where messages should go
    - **Channels**: comma-separated channel names to monitor
-4. Go to the **Auth** tab → click **Open Login Browser** → log into Slack → click **Save Session**
-5. Click **Start Auto-Sync**
+5. Go to the **Auth** tab → click **Open Login Browser** → log in → click **Save Session**
+6. Click **Start Auto-Sync**
 
 That's it. Your messages will start flowing into Obsidian.
 
@@ -125,10 +131,10 @@ npm run build
 Slack is just the beginning. The vision is **complete work context in Obsidian**:
 
 - [x] **Slack** — channels, DMs, groups
+- [x] **Microsoft Teams** — channels and chats
 - [ ] **Email** — Gmail, Outlook inbox mirrored to vault
 - [ ] **Meeting recordings** — transcripts from Zoom, Google Meet, Teams
 - [ ] **WhatsApp** — personal and business chats
-- [ ] **Microsoft Teams** — channels and chats
 - [ ] **Calendar** — meeting notes auto-linked to events
 - [ ] **AI summaries** — daily digest of key decisions and action items
 
