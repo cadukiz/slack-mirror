@@ -3,38 +3,9 @@ Playwright-based Slack scraper.
 Reads messages from channels, DMs, and group chats.
 """
 import re
-from datetime import datetime, timedelta
 from playwright.sync_api import sync_playwright, Page, BrowserContext
 from config import AUTH_STATE_PATH, SLACK_WORKSPACE_URL, CHANNELS
-
-
-def _resolve_date(date_str: str) -> str:
-    """Convert relative dates (Today, Yesterday) to YYYY-MM-DD format."""
-    today = datetime.now()
-    lower = date_str.lower().strip()
-
-    if lower == "today":
-        return today.strftime("%Y-%m-%d")
-    if lower == "yesterday":
-        return (today - timedelta(days=1)).strftime("%Y-%m-%d")
-
-    # Try to parse dates like "Sunday, March 15th" or "Mar 15th"
-    # Remove ordinal suffixes (st, nd, rd, th)
-    cleaned = re.sub(r'(\d+)(st|nd|rd|th)', r'\1', date_str)
-    # Remove day of week prefix
-    cleaned = re.sub(r'^\w+day,?\s*', '', cleaned)
-
-    for fmt in ("%B %d", "%b %d", "%B %d, %Y", "%b %d, %Y"):
-        try:
-            parsed = datetime.strptime(cleaned.strip(), fmt)
-            # If no year in format, assume current year
-            if parsed.year == 1900:
-                parsed = parsed.replace(year=today.year)
-            return parsed.strftime("%Y-%m-%d")
-        except ValueError:
-            continue
-
-    return date_str
+from utils import resolve_date
 
 
 def _create_context(playwright) -> BrowserContext:
@@ -90,7 +61,7 @@ def _extract_messages(page: Page) -> list[dict]:
                     time_str = time_el.inner_text().strip()
 
             # Resolve relative dates to YYYY-MM-DD
-            date_str = _resolve_date(date_str)
+            date_str = resolve_date(date_str)
 
             # Convert 12h time to 24h HH:MM:SS format
             time_clean = time_str
