@@ -1,0 +1,20 @@
+{
+  "name": "slack-mirror",
+  "version": "1.0.0",
+  "description": "Ingests Slack and Teams messages from client workspaces into the Obsidian vault",
+  "communication": "file",
+  "vaultPaths": {
+    "output": "Projects/{{project}}/context/slack/"
+  },
+  "cli": {
+    "command": "python3",
+    "args": ["src/main.py", "--project", "{{project}}"],
+    "cwd": "tools/slack-mirror"
+  },
+  "schedule": "*/30 * * * *",
+  "requires": ["obsidian-vault"],
+  "healthCheck": {
+    "command": "python3 -c \"import playwright; print('ok')\"",
+    "timeout": 10
+  }
+}
